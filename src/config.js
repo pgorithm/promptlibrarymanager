@@ -1,20 +1,17 @@
+// ===============================
+// КОНФИГУРАЦИЯ РАСШИРЕНИЯ
+// ===============================
+// Здесь собраны настройки, которыми можно управлять поведением UI.
+// menuPosition — положение всплывающего меню относительно кнопки-триггера
+// на страницах. Допустимые значения:
+// - "top-right"
+// - "top-left"
+// - "bottom-left"
+// - "bottom-right"
+// Рекомендуемое значение по умолчанию: "bottom-right".
 const CONFIG = {
-  allowList: [
-    "https://chat.openai.com/*",
-    "https://claude.ai/*"
-  ],
   menuPosition: "bottom-right"
 };
 
-// Проверка соответствия URL списку разрешенных
-function matchesAllowList(url) {
-  return CONFIG.allowList.some(pattern => {
-    const regex = new RegExp(
-      `^${pattern.replace(/\*/g, '.*').replace(/\//g, '\\/')}$`
-    );
-    return regex.test(url);
-  });
-}
-
 // Экспортируем конфигурацию для использования в других модулях
-export { CONFIG, matchesAllowList };
+export { CONFIG };
