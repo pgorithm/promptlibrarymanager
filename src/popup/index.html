@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptLibrary Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Prompt Library</h1>
+    </header>
+    
+    <div class="groups-container" id="groups-container">
+      <!-- Группы будут добавляться динамически -->
+    </div>
+    
+    <div class="actions">
+      <button id="add-group-btn" class="btn btn-primary">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Add group
+      </button>
+    </div>
+    
+    <div class="import-export">
+      <button id="import-btn" class="btn btn-secondary">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 2v8m0 0l3-3m-3 3L5 7M3 12h10v2H3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        Import
+      </button>
+      <button id="export-btn" class="btn btn-secondary">
+        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 14V6m0 0l3 3M8 6L5 9M3 2h10v2H3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        Export
+      </button>
+      <input id="import-file" type="file" accept="application/json" style="display:none" />
+    </div>
+  </div>
+  
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+  
+  <script src="script.js" type="module"></script>
+</body>
+</html>

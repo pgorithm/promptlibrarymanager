@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "PromptLibrary Manager",
+  "version": "0.1",
+  "description": "Управление персональной библиотекой промтов для LLM",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content.mjs"],
+      "run_at": "document_end"
+    }
+  ],
+  
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["src/popup/index.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
