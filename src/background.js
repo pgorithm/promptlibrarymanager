@@ -1,21 +1,35 @@
 // src/background.js
 
+// ===============================
+// ФОНОВЫЙ СКРИПТ (service worker)
+// ===============================
+// Этот файл выполняется в контексте фонового процесса расширения.
+// Здесь мы:
+// - обрабатываем сообщения от контент‑скрипта и popup (chrome.runtime.onMessage)
+// - по запросу открываем модальные окна прямо на вкладке (через chrome.scripting)
+// - обновляем открытые меню на страницах после изменений данных
+// - выполняем вспомогательные действия (копирование в буфер обмена)
+
 import { loadData, addPrompt as addPromptToGroup, deletePrompt as deletePromptById } from './utils/storage.js';
 
-// Инициализация хранилища (как ранее)
-chrome.runtime.onInstalled.addListener(async () => { /* ... */ });
+// Инициализация расширения при установке/обновлении
+// Здесь можно было бы создать структуру данных по умолчанию или выполнить миграции.
+chrome.runtime.onInstalled.addListener(async () => { /* инициализация при установке, если потребуется */ });
 
-// Управление контекстным меню (как ранее)
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => { /* ... */ });
+// Событие обновления вкладок (зарезервировано на будущее)
+// Можно использовать для автопоказа/скрытия UI при смене URL и т.п.
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => { /* обновление вкладки */ });
 
-// Обработка сообщений от контент-скриптов и попапа
+// Обработка сообщений от контент‑скриптов и popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.action) {
     case 'getPrompts':
+      // Возвращаем все данные (список групп и промтов)
       loadData().then(data => sendResponse(data));
-      return true; // Указываем, что ответ будет асинхронным
+      return true; // Важно: ответ асинхронный, поэтому возвращаем true
       
     case 'openModal':
+      // Открываем модалку на активной вкладке для добавления/редактирования промта
       openModalInTab(sender.tab.id, request);
       break;
       
@@ -114,6 +128,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
 
+      // Добавляет новый промт в указанную группу и обновляет открытые меню
       if (request && request.data && request.data.groupId) {
         addPromptToGroup(request.data.groupId, {
           title: request.data.title,
@@ -127,6 +142,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
       
     case 'deletePrompt':
+      // Удаляет промт по ID и обновляет открытые меню
       deletePromptById(request.promptId).then((success) => {
         if (success) {
           refreshOpenMenus();
@@ -135,6 +151,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break;
 
     case 'copyToClipboard':
+      // Копирует текст в буфер обмена в контексте активной вкладки
       copyToClipboard(request.text);
       break;
   }
@@ -153,6 +170,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
 
+// Вставляет в контекст страницы функцию создания модального окна
 function openModalInTab(tabId, request) {
   chrome.scripting.executeScript({
     target: { tabId: tabId },
@@ -161,9 +179,10 @@ function openModalInTab(tabId, request) {
   });
 }
 
-// Функция для вызова в контексте страницы
+// Функция, исполняемая уже в контексте страницы.
+// Создаёт и показывает модальное окно для добавления/редактирования промта.
 function openModalFromBackground(request) {
-  // Создаем модальное окно для добавления/редактирования промта
+  // Если модалка уже есть — удаляем, чтобы не было дублей
   if (window.plmModal) window.plmModal.remove();
 
   const modal = document.createElement('div');
@@ -200,7 +219,7 @@ function openModalFromBackground(request) {
   document.body.appendChild(modal);
   window.plmModal = modal;
 
-  // Обработчики событий
+  // Обработчики событий модального окна
   document.getElementById('plm-modal-cancel').addEventListener('click', () => modal.remove());
   document.getElementById('plm-modal-save').addEventListener('click', () => {
     const title = document.getElementById('plm-prompt-title').value;
@@ -218,7 +237,7 @@ function openModalFromBackground(request) {
       return;
     }
 
-    // Отправляем данные в фоновый скрипт для сохранения
+    // Отправляем данные обратно в фоновый скрипт для сохранения
     chrome.runtime.sendMessage({
       action: 'addPrompt',
       data: {
@@ -232,7 +251,7 @@ function openModalFromBackground(request) {
   });
 }
 function refreshOpenMenus() {
-  // Отправляем сообщение всем контент-скриптам для обновления
+  // Рассылаем сообщение всем вкладкам, чтобы контент-скрипт перерисовал меню
   chrome.tabs.query({}, tabs => {
     tabs.forEach(tab => {
       chrome.tabs.sendMessage(tab.id, { action: 'refreshMenu' });

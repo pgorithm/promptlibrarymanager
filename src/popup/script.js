@@ -1,6 +1,15 @@
 import { loadData, saveData, generateUUID, deletePrompt, deleteGroup } from '../utils/storage.js';
 import { exportAsJSON } from '../utils/export.js';
 
+// ===============================
+// POPUP UI (окно расширения на панели браузера)
+// ===============================
+// Этот файл отвечает за интерфейс управления библиотекой промтов:
+// - отображение групп и промтов
+// - добавление/редактирование/удаление
+// - импорт и экспорт данных
+// Здесь нет прямого доступа к DOM страниц сайтов — только к DOM popup.
+
 // DOM элементы
 const groupsContainer = document.getElementById('groups-container');
 const addGroupBtn = document.getElementById('add-group-btn');
@@ -8,15 +17,15 @@ const importBtn = document.getElementById('import-btn');
 const exportBtn = document.getElementById('export-btn');
 const importFileInput = document.getElementById('import-file');
 
-// Основные переменные
+// Основные переменные состояния
 let currentData = { groups: [] };
 let collapsedGroupIds = new Set();
 
-// Инициализация
+// Инициализация popup после загрузки DOM
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     currentData = await loadData();
-    // Читаем локально сохраненные свернутые группы
+    // Локально запоминаем, какие группы были свернуты пользователем, через localStorage
     const stored = localStorage.getItem('plm_collapsed_groups');
     if (stored) {
       try { collapsedGroupIds = new Set(JSON.parse(stored)); } catch (_) { collapsedGroupIds = new Set(); }
@@ -27,14 +36,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     showNotification('Failed to load data', 'error');
   }
   
-  // Назначение обработчиков
+  // Назначение обработчиков для кнопок верхнего уровня
   addGroupBtn.addEventListener('click', showAddGroupModal);
   importBtn.addEventListener('click', () => importFileInput.click());
   exportBtn.addEventListener('click', handleExport);
   importFileInput.addEventListener('change', handleImport);
 });
 
-// Рендеринг групп
+// Рендеринг списка групп
 function renderGroups(groups) {
   groupsContainer.innerHTML = '';
   
@@ -80,10 +89,10 @@ function renderGroups(groups) {
     
     groupsContainer.appendChild(groupElement);
     
-    // Рендеринг промтов группы
+    // Рендеринг промтов этой группы
     renderPrompts(group.id, group.prompts || []);
     
-    // Обработчики для группы
+    // Обработчики для действий с группой
     groupElement.querySelector('.add-prompt-btn').addEventListener('click', (e) => {
       const groupId = (e.currentTarget || e.target).dataset.group;
       showPromptModal(null, groupId);
@@ -91,7 +100,7 @@ function renderGroups(groups) {
     
     groupElement.querySelector('.delete-group-btn').addEventListener('click', async (e) => {
       const groupId = (e.currentTarget || e.target).dataset.group;
-      // Подтверждение удаления группы (кастомное модальное окно)
+      // Кастомное подтверждение удаления группы (без window.confirm)
       const confirm = await openConfirmModal('Delete group?', 'All prompts in the group will be removed.');
       if (!confirm) return;
       deleteGroupHandler(groupId);
@@ -114,7 +123,7 @@ function renderGroups(groups) {
   });
 }
 
-// Рендеринг промтов
+// Рендеринг списка промтов конкретной группы
 function renderPrompts(groupId, prompts) {
   const container = document.getElementById(`prompts-${groupId}`);
   if (!container) return;
@@ -155,11 +164,11 @@ function renderPrompts(groupId, prompts) {
     
     container.appendChild(promptElement);
     
-    // Безопасная вставка текста промта (как текст, не HTML)
+    // Безопасная вставка текста промта: используем textContent (не innerHTML)
     const contentEl = promptElement.querySelector('.prompt-content');
     if (contentEl) contentEl.textContent = prompt.content;
 
-    // Обработчики для промта
+    // Обработчики для действий над промтом
     promptElement.querySelector('.copy-prompt-btn').addEventListener('click', (e) => {
       const content = decodeURIComponent((e.currentTarget || e.target).dataset.content);
       copyToClipboard(content);
@@ -172,7 +181,7 @@ function renderPrompts(groupId, prompts) {
     
     promptElement.querySelector('.delete-prompt-btn').addEventListener('click', async (e) => {
       const promptId = (e.currentTarget || e.target).dataset.prompt;
-      // Подтверждение удаления промта (кастомное модальное окно)
+      // Кастомное подтверждение удаления промта (без window.confirm)
       const confirm = await openConfirmModal('Delete prompt?', 'This action cannot be undone.');
       if (!confirm) return;
       deletePromptHandler(promptId);
@@ -182,7 +191,7 @@ function renderPrompts(groupId, prompts) {
 
 // ===== ОПЕРАЦИИ С ГРУППАМИ =====
 async function showAddGroupModal() {
-  // Ввод названия новой группы (кастомное модальное окно)
+  // Показываем модальное окно с полем ввода для названия новой группы
   const name = await openInputModal('New group', 'Group name');
   if (!name) return;
   
@@ -207,7 +216,7 @@ async function deleteGroupHandler(groupId) {
   try {
     await deleteGroup(groupId);
     
-    // Обновляем данные и интерфейс
+    // Обновляем данные из хранилища и перерисовываем интерфейс
     currentData = await loadData();
     renderGroups(currentData.groups);
     showNotification('Group deleted', 'success');
@@ -219,7 +228,7 @@ async function deleteGroupHandler(groupId) {
 
 // ===== ОПЕРАЦИИ С ПРОМТАМИ =====
 async function showPromptModal(promptId = null, groupId = null) {
-  // Создаем модальное окно
+  // Создаем модальное окно для добавления/редактирования промта
   const modal = document.createElement('div');
   modal.className = 'modal';
   modal.innerHTML = `
@@ -303,7 +312,7 @@ async function addPrompt(title, content, groupId) {
 }
 
 async function updatePrompt(promptId, title, content, newGroupId) {
-  // Находим текущую группу и промт
+  // Находим текущую группу и сам промт
   let currentGroup, currentPrompt;
   for (const group of currentData.groups) {
     if (group.prompts) {
@@ -320,11 +329,11 @@ async function updatePrompt(promptId, title, content, newGroupId) {
     throw new Error('Prompt not found');
   }
   
-  // Обновляем данные
+  // Обновляем поля промта
   currentPrompt.title = title;
   currentPrompt.content = content;
   
-  // Если изменилась группа, перемещаем промт
+  // Если пользователь выбрал другую группу — перемещаем промт
   if (currentGroup.id !== newGroupId) {
     // Удаляем из текущей группы
     currentGroup.prompts = currentGroup.prompts.filter(p => p.id !== promptId);
@@ -376,7 +385,7 @@ async function handleImport(event) {
       const importedData = JSON.parse(e.target.result);
       await mergeImportedData(importedData);
       
-      // Обновляем данные и интерфейс
+      // Обновляем данные и интерфейс после успешного слияния
       currentData = await loadData();
       renderGroups(currentData.groups);
       showNotification('Data imported', 'success');
@@ -471,16 +480,16 @@ function showNotification(message, type = 'info') {
   toast.appendChild(closeBtn);
   container.appendChild(toast);
 
-  // force reflow to enable transition
+  // Запускаем анимацию появления (force reflow)
   requestAnimationFrame(() => {
     toast.classList.add('show');
   });
 
-  // auto hide after 3s (5s for error)
+  // Авто-скрытие через 3 секунды (для ошибок — 5 секунд)
   const ttl = type === 'error' ? 5000 : 3000;
   const hideTimer = setTimeout(() => removeToast(toast), ttl);
 
-  // if user hovers, pause timer
+  // Если пользователь навёл курсор, не скрываем уведомление
   toast.addEventListener('mouseenter', () => clearTimeout(hideTimer));
 }
 
