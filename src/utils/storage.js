@@ -108,7 +108,7 @@ export async function updatePrompt(promptId, promptData) {
 // Ниже оставлен пример альтернативной реализации удаления промта (закомментирован).
 // Он логически эквивалентен активной функции deletePrompt ниже, но был заменён
 // на версию с дополнительной проверкой наличия массива prompts у каждой группы.
-// Оставлено как справочный материал.
+// Оставлено по приколу.
 //
 // export async function deletePrompt(promptId) {
 //   const data = await loadData();
