@@ -8,7 +8,7 @@
 // - обрабатываем сообщения от контент‑скрипта и popup (chrome.runtime.onMessage)
 // - по запросу открываем модальные окна прямо на вкладке (через chrome.scripting)
 // - обновляем открытые меню на страницах после изменений данных
-// - выполняем вспомогательные действия (копирование в буфер обмена)
+// - выполняем копирование в буфер обмена
 
 import { loadData, addPrompt as addPromptToGroup, deletePrompt as deletePromptById } from './utils/storage.js';
 
@@ -73,7 +73,7 @@ function openModalInTab(tabId, request) {
 }
 
 // Функция, исполняемая уже в контексте страницы.
-// Создаёт и показывает модальное окно для добавления/редактирования промта.
+// Создаёт и показывает модальное окно для добавления/редактирования промта (текстовой заметки).
 function openModalFromBackground(request) {
   // Если модалка уже есть — удаляем, чтобы не было дублей
   if (window.plmModal) window.plmModal.remove();

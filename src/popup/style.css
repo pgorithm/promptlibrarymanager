@@ -30,6 +30,19 @@
   }
 }
 
+/* Принудительная тема через data-атрибут */
+[data-theme="light"] {
+  --background: var(--background-light);
+  --text: var(--text-light);
+  --card-bg: #fff;
+}
+
+[data-theme="dark"] {
+  --background: var(--background-dark);
+  --text: var(--text-dark);
+  --card-bg: #2d2d2d;
+}
+
 /* Сброс отступов и настройка box-sizing */
 * {
   box-sizing: border-box;
@@ -62,6 +75,13 @@ header {
   background: var(--background);
   z-index: 10;
   box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 6px;
 }
 
 /* Список групп */
@@ -132,12 +152,33 @@ header {
 
 .icon { width: 16px; height: 16px; fill: currentColor; }
 
-/* Контейнер кнопок Импорт/Экспорт */
-.import-export {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
+/* Базовая контрастность иконок (светлая тема по умолчанию) */
+.icon-btn { color: #444; }
+.group-toggle .icon { color: #444; }
+.prompt-actions button { color: #444; }
+
+/* Улучшенная контрастность иконок в тёмной теме */
+@media (prefers-color-scheme: dark) {
+  .icon-btn .icon,
+  .group-actions .icon,
+  .prompt-actions .plm-icon,
+  .prompt-actions .icon {
+    color: #e6e6e6;
+  }
+  .icon-btn:hover { background-color: rgba(255,255,255,0.08); }
 }
+
+/* Принудительная тёмная/светлая темы для иконок */
+[data-theme="dark"] .icon-btn,
+[data-theme="dark"] .group-toggle .icon,
+[data-theme="dark"] .prompt-actions button { color: #e6e6e6; }
+
+[data-theme="light"] .icon-btn,
+[data-theme="light"] .group-toggle .icon,
+[data-theme="light"] .prompt-actions button { color: #444; }
+
+/* Контейнер кнопок Импорт/Экспорт */
+/* .import-export удалено — кнопки перенесены в меню настроек */
 
 /* Карточка группы */
 .group {
@@ -189,6 +230,8 @@ header {
   border-radius: 6px;
   padding: 12px;
 }
+
+[data-theme="dark"] .prompt-card { background: rgba(255,255,255,0.06); }
 
 /* Заголовок промта и действия */
 .prompt-header {

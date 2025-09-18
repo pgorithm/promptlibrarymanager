@@ -13,8 +13,7 @@ import { exportAsJSON } from '../utils/export.js';
 // DOM элементы
 const groupsContainer = document.getElementById('groups-container');
 const addGroupBtn = document.getElementById('add-group-btn');
-const importBtn = document.getElementById('import-btn');
-const exportBtn = document.getElementById('export-btn');
+const settingsBtn = document.getElementById('settings-btn');
 const importFileInput = document.getElementById('import-file');
 
 // Основные переменные состояния
@@ -38,9 +37,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   // Назначение обработчиков для кнопок верхнего уровня
   addGroupBtn.addEventListener('click', showAddGroupModal);
-  importBtn.addEventListener('click', () => importFileInput.click());
-  exportBtn.addEventListener('click', handleExport);
+  settingsBtn.addEventListener('click', openSettingsModal);
   importFileInput.addEventListener('change', handleImport);
+
+  // Применяем сохранённую тему
+  const savedTheme = localStorage.getItem('plm_theme') || 'system';
+  applyTheme(savedTheme);
 });
 
 // Рендеринг списка групп
@@ -71,7 +73,7 @@ function renderGroups(groups) {
           ${group.name} <span style="opacity:.7; font-weight:normal;">(${(group.prompts||[]).length})</span>
         </h3>
         <div class="group-actions">
-          <button class="add-prompt-btn btn btn-primary" data-group="${group.id}">
+          <button class="add-prompt-btn btn btn-primary" data-group="${group.id}" title="Add prompt">
             <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
               <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
@@ -142,17 +144,17 @@ function renderPrompts(groupId, prompts) {
       <div class="prompt-header">
         <h4>${prompt.title}</h4>
         <div class="prompt-actions">
-          <button class="copy-prompt-btn icon-btn" title="Copy" data-content="${encodeURIComponent(prompt.content)}">
+          <button class="copy-prompt-btn icon-btn" title="Copy to clipboard" data-content="${encodeURIComponent(prompt.content)}">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M9 9h10v10H9zM5 5h10v2H7v8H5z" fill="currentColor"/>
             </svg>
           </button>
-          <button class="edit-prompt-btn icon-btn" title="Edit" data-prompt="${prompt.id}">
+          <button class="edit-prompt-btn icon-btn" title="Edit prompt" data-prompt="${prompt.id}">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 20h4l10-10-4-4L4 16v4zm11-13l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
           </button>
-          <button class="delete-prompt-btn icon-btn" title="Delete" data-prompt="${prompt.id}">
+          <button class="delete-prompt-btn icon-btn" title="Delete prompt" data-prompt="${prompt.id}">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6 7h12M9 7V5h6v2m-7 3l1 9h8l1-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
@@ -574,4 +576,75 @@ async function openInputModal(title, placeholder) {
       }
     });
   });
+}
+
+// ===== НАСТРОЙКИ (МОДАЛКА) =====
+function openSettingsModal() {
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  const currentTheme = localStorage.getItem('plm_theme') || 'system';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <h3>Settings</h3>
+      <div style="margin-top:10px;">
+        <label style="display:block; font-weight:600; margin-bottom:6px;">Theme</label>
+        <div class="theme-select" style="display:flex; gap:8px; flex-wrap:wrap;">
+          <label class="btn btn-secondary" style="padding:6px 10px;">
+            <input type="radio" name="theme" value="system" ${currentTheme==='system'?'checked':''} /> System
+          </label>
+          <label class="btn btn-secondary" style="padding:6px 10px;">
+            <input type="radio" name="theme" value="light" ${currentTheme==='light'?'checked':''} /> Light
+          </label>
+          <label class="btn btn-secondary" style="padding:6px 10px;">
+            <input type="radio" name="theme" value="dark" ${currentTheme==='dark'?'checked':''} /> Dark
+          </label>
+        </div>
+      </div>
+      <div style="margin-top:16px;">
+        <label style="display:block; font-weight:600; margin-bottom:6px;">Data</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button id="settings-import" class="btn btn-secondary">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0l3-3m-3 3L5 7M3 12h10v2H3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            Import
+          </button>
+          <button id="settings-export" class="btn btn-secondary">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14V6m0 0l3 3M8 6L5 9M3 2h10v2H3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            Export
+          </button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="settings-close" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Theme change
+  modal.querySelectorAll('input[name="theme"]').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const value = e.target.value;
+      applyTheme(value);
+      localStorage.setItem('plm_theme', value);
+    });
+  });
+
+  // Import/Export
+  modal.querySelector('#settings-import').addEventListener('click', () => importFileInput.click());
+  modal.querySelector('#settings-export').addEventListener('click', handleExport);
+
+  // Close
+  modal.querySelector('#settings-close').addEventListener('click', () => modal.remove());
+}
+
+function applyTheme(mode) {
+  const root = document.documentElement;
+  if (mode === 'system') {
+    root.removeAttribute('data-theme');
+  } else if (mode === 'dark') {
+    root.setAttribute('data-theme', 'dark');
+  } else {
+    root.setAttribute('data-theme', 'light');
+  }
 }

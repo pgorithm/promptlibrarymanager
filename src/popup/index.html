@@ -9,7 +9,14 @@
 <body>
   <div class="app">
     <header>
-      <h1>Prompt Library</h1>
+      <div class="header-inner">
+        <h1>Prompt Library</h1>
+        <button id="settings-btn" class="icon-btn" aria-label="Settings" title="Settings">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" role="img">
+            <path d="M12 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7zm8.485-3.5c0-.52-.053-1.03-.155-1.52l2.17-1.25a.75.75 0 00.273-1.026l-2-3.464a.75.75 0 00-1.007-.308l-2.147 1.01a8.01 8.01 0 00-2.63-1.52l-.33-2.36A.75.75 0 0011.94 1h-3.88a.75.75 0 00-.743.63l-.33 2.36a8.01 8.01 0 00-2.63 1.52l-2.147-1.01a.75.75 0 00-1.007.308l-2 3.464a.75.75 0 00.273 1.026l2.17 1.25c-.102.49-.155 1-.155 1.52s.053 1.03.155 1.52l-2.17 1.25a.75.75 0 00-.273 1.026l2 3.464a.75.75 0 001.007.308l2.147-1.01c.785.66 1.67 1.2 2.63 1.52l.33 2.36c.06.36.37.63.743.63h3.88c.37 0 .683-.27.743-.63l.33-2.36c.96-.32 1.845-.86 2.63-1.52l2.147 1.01a.75.75 0 001.007-.308l2-3.464a.75.75 0 00-.273-1.026l-2.17-1.25c.102-.49.155-1 .155-1.52z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
     </header>
     
     <div class="groups-container" id="groups-container">
@@ -25,22 +32,8 @@
       </button>
     </div>
     
-    <div class="import-export">
-      <button id="import-btn" class="btn btn-secondary">
-        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M8 2v8m0 0l3-3m-3 3L5 7M3 12h10v2H3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-        Import
-      </button>
-      <button id="export-btn" class="btn btn-secondary">
-        <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M8 14V6m0 0l3 3M8 6L5 9M3 2h10v2H3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-        Export
-      </button>
-      <!-- Скрытый input для выбора файла импорта JSON -->
-      <input id="import-file" type="file" accept="application/json" style="display:none" />
-    </div>
+    <!-- Скрытый input для импорта (используется из меню настроек) -->
+    <input id="import-file" type="file" accept="application/json" style="display:none" />
   </div>
   
   <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
