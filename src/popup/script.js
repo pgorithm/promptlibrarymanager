@@ -67,21 +67,26 @@ function renderGroups(groups) {
     groupElement.innerHTML = `
       <div class="group-header">
         <h3 class="group-toggle" data-group="${group.id}" title="Collapse/expand">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" style="transform:${collapsedGroupIds.has(group.id) ? 'rotate(-90deg)' : 'rotate(0)'}; transition: transform .15s ease;">
-            <path d="M8 10l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <!-- Иконка сворачивания/разворачивания группы (стрелка). Чтобы изменить:
+               заменить <path> или весь <svg>. Поворот реализован стилем transform в inline-стиле. -->
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" style="transform:${collapsedGroupIds.has(group.id) ? 'rotate(-90deg)' : 'rotate(0)'}; transition: transform .15s ease;">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
           </svg>
           ${group.name} <span style="opacity:.7; font-weight:normal;">(${(group.prompts||[]).length})</span>
         </h3>
         <div class="group-actions">
-          <button class="add-prompt-btn btn btn-primary" data-group="${group.id}" title="Add prompt">
-            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <button class="add-prompt-btn btn btn-primary" data-group="${group.id}" title="Add prompt" aria-label="Add prompt">
+            <!-- Иконка добавления промта (плюс). Можно заменить <path>/<svg> или использовать <img>. -->
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
             </svg>
-            Prompt
+            add
           </button>
-          <button class="delete-group-btn icon-btn" title="Delete group" data-group="${group.id}">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 7h12M9 7V5h6v2m-7 3l1 9h8l1-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <button class="delete-group-btn icon-btn" title="Delete group" aria-label="Delete group" data-group="${group.id}">
+            <!-- Иконка удаления группы (корзина). Заменить <path>/<svg> для другого стиля
+                 или использовать <img src="../../icons/...">. -->
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+              <path d="M6 7h12M9 7V5h6v2m-7 3l1 9h8l1-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
         </div>
@@ -144,19 +149,19 @@ function renderPrompts(groupId, prompts) {
       <div class="prompt-header">
         <h4>${prompt.title}</h4>
         <div class="prompt-actions">
-          <button class="copy-prompt-btn icon-btn" title="Copy to clipboard" data-content="${encodeURIComponent(prompt.content)}">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M9 9h10v10H9zM5 5h10v2H7v8H5z" fill="currentColor"/>
+          <button class="copy-prompt-btn icon-btn" title="Copy to clipboard" aria-label="Copy prompt" data-content="${encodeURIComponent(prompt.content)}">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 9h10v10H9zM5 5h10v2H7v8H5z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
             </svg>
           </button>
-          <button class="edit-prompt-btn icon-btn" title="Edit prompt" data-prompt="${prompt.id}">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 20h4l10-10-4-4L4 16v4zm11-13l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <button class="edit-prompt-btn icon-btn" title="Edit prompt" aria-label="Edit prompt" data-prompt="${prompt.id}">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+              <path d="M4 20h4l10-10-4-4L4 16v4zm11-13l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <button class="delete-prompt-btn icon-btn" title="Delete prompt" data-prompt="${prompt.id}">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 7h12M9 7V5h6v2m-7 3l1 9h8l1-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <button class="delete-prompt-btn icon-btn" title="Delete prompt" aria-label="Delete prompt" data-prompt="${prompt.id}">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+              <path d="M6 7h12M9 7V5h6v2m-7 3l1 9h8l1-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
         </div>
@@ -604,10 +609,12 @@ function openSettingsModal() {
         <label style="display:block; font-weight:600; margin-bottom:6px;">Data</label>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button id="settings-import" class="btn btn-secondary">
+            <!-- Иконка импорта (стрелка вниз/в папку). Замените <path>/<svg> или используйте <img>. -->
             <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0l3-3m-3 3L5 7M3 12h10v2H3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
             Import
           </button>
           <button id="settings-export" class="btn btn-secondary">
+            <!-- Иконка экспорта (стрелка вверх/из папки). Замените <path>/<svg> или используйте <img>. -->
             <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14V6m0 0l3 3M8 6L5 9M3 2h10v2H3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
             Export
           </button>

@@ -138,8 +138,8 @@ header {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border-radius: 6px;
   background: transparent;
@@ -150,7 +150,8 @@ header {
 .icon-btn:hover { background-color: rgba(0,0,0,0.06); }
 .icon-btn:active { transform: translateY(1px); }
 
-.icon { width: 16px; height: 16px; fill: currentColor; }
+/* Единый размер иконок, цвет управляется через currentColor */
+.icon { width: 18px; height: 18px; fill: currentColor; }
 
 /* Базовая контрастность иконок (светлая тема по умолчанию) */
 .icon-btn { color: #444; }
@@ -163,7 +164,7 @@ header {
   .group-actions .icon,
   .prompt-actions .plm-icon,
   .prompt-actions .icon {
-    color: #e6e6e6;
+    color: #eaeaea;
   }
   .icon-btn:hover { background-color: rgba(255,255,255,0.08); }
 }
@@ -171,11 +172,19 @@ header {
 /* Принудительная тёмная/светлая темы для иконок */
 [data-theme="dark"] .icon-btn,
 [data-theme="dark"] .group-toggle .icon,
-[data-theme="dark"] .prompt-actions button { color: #e6e6e6; }
+[data-theme="dark"] .prompt-actions button { color: #eaeaea; }
 
 [data-theme="light"] .icon-btn,
 [data-theme="light"] .group-toggle .icon,
 [data-theme="light"] .prompt-actions button { color: #444; }
+
+/* Видимый фокус для клавиатуры */
+.icon-btn:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(98,0,238,0.25);
+}
 
 /* Контейнер кнопок Импорт/Экспорт */
 /* .import-export удалено — кнопки перенесены в меню настроек */

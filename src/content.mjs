@@ -44,7 +44,7 @@ menuContainer.innerHTML = `
   <div class="menu-header">
     <h3 style="margin: 0; padding: 15px; font-size: 16px;">Prompt Library</h3>
     <button id="plm-close-btn" class="plm-icon-btn" aria-label="Close" title="Close">
-      <svg class="plm-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <svg class="plm-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none">
         <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </button>
@@ -59,10 +59,10 @@ document.body.appendChild(menuContainer);
 const headerStyle = document.createElement('style');
 headerStyle.textContent = `
   .menu-header { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding:0 10px; }
-  .plm-icon-btn { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; background:transparent; border:1px solid transparent; border-radius:6px; cursor:pointer; transition: background-color .2s ease, transform .05s ease; }
+  .plm-icon-btn { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; background:transparent; border:1px solid transparent; border-radius:6px; cursor:pointer; transition: background-color .2s ease, transform .05s ease; }
   .plm-icon-btn:hover { background-color: rgba(0,0,0,0.06); }
   .plm-icon-btn:active { transform: translateY(1px); }
-  .plm-icon { width:16px; height:16px; fill: currentColor; }
+  .plm-icon { width:18px; height:18px; fill: currentColor; }
   .plm-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:none; border-radius:6px; padding:6px 10px; font-weight:600; cursor:pointer; transition: background-color .2s ease, transform .05s ease, box-shadow .2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
   .plm-btn:active { transform: translateY(1px); }
   .plm-btn-primary { background:#6200ee; color:#fff; }
@@ -140,8 +140,8 @@ function renderMenuContent(data) {
       <div class="group" style="margin-bottom: 15px;">
         <h4 style="margin: 0 0 10px 0; display: flex; align-items: center;">
           <span style="flex: 1;">${group.name}</span>
-          <button class="add-prompt-btn plm-btn plm-btn-primary" data-group="${group.id}" title="Add prompt">
-            <svg class="plm-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <button class="add-prompt-btn plm-btn plm-btn-primary" data-group="${group.id}" title="Add prompt" aria-label="Add prompt">
+            <svg class="plm-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           </button>
         </h4>
         <div class="prompts-container" id="prompts-${group.id}">`;
@@ -153,14 +153,14 @@ function renderMenuContent(data) {
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
               <strong>${prompt.title}</strong>
               <div>
-                <button class="copy-prompt-btn plm-icon-btn" data-content="${encodeURIComponent(prompt.content)}" title="Copy" style="margin-left: 5px;">
-                  <svg class="plm-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9h10v10H9zM5 5h10v2H7v8H5z" fill="currentColor"/></svg>
+                <button class="copy-prompt-btn plm-icon-btn" data-content="${encodeURIComponent(prompt.content)}" title="Copy" aria-label="Copy prompt" style="margin-left: 5px;">
+                  <svg class="plm-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M9 9h10v10H9zM5 5h10v2H7v8H5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
-                <button class="edit-prompt-btn plm-icon-btn" data-id="${prompt.id}" data-group="${group.id}" title="Edit" style="margin-left: 5px;">
-                  <svg class="plm-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l10-10-4-4L4 16v4zm11-13l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <button class="edit-prompt-btn plm-icon-btn" data-id="${prompt.id}" data-group="${group.id}" title="Edit" aria-label="Edit prompt" style="margin-left: 5px;">
+                  <svg class="plm-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M4 20h4l10-10-4-4L4 16v4zm11-13l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
-                <button class="delete-prompt-btn plm-icon-btn" data-id="${prompt.id}" data-group="${group.id}" title="Delete" style="margin-left: 5px;">
-                  <svg class="plm-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12M9 7V5h6v2m-7 3l1 9h8l1-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <button class="delete-prompt-btn plm-icon-btn" data-id="${prompt.id}" data-group="${group.id}" title="Delete" aria-label="Delete prompt" style="margin-left: 5px;">
+                  <svg class="plm-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none"><path d="M6 7h12M9 7V5h6v2m-7 3l1 9h8l1-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
               </div>
             </div>
