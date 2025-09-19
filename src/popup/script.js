@@ -81,9 +81,9 @@ function renderGroups(groups) {
           </button>
           <button class="delete-group-btn icon-btn" title="Delete group" aria-label="Delete group" data-group="${group.id}">
             <svg class="icon" viewBox="0 0 32 32" aria-hidden="true" fill="none">
-              <ellipse cx="16" cy="8" stroke="#535358" stroke-linejoin="round" stroke-width="1" rx="11" ry="3"/>
-              <path stroke="#535358" stroke-linejoin="round" stroke-width="1" d="M5 8l3 18s1 2 8 2 8-2 8-2l3-18"/>
-              <path stroke="#535358" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M18.5 16.5l-5 5M13.5 16.5l5 5"/>
+              <ellipse cx="16" cy="8" stroke="currentColor" stroke-linejoin="round" stroke-width="1" rx="11" ry="3"/>
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="1" d="M5 8l3 18s1 2 8 2 8-2 8-2l3-18"/>
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M18.5 16.5l-5 5M13.5 16.5l5 5"/>
             </svg>
           </button>
         </div>
@@ -147,20 +147,20 @@ function renderPrompts(groupId, prompts) {
         <h4>${prompt.title}</h4>
         <div class="prompt-actions">
           <button class="copy-prompt-btn icon-btn" title="Copy to clipboard" aria-label="Copy prompt" data-content="${encodeURIComponent(prompt.content)}">
-            <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 8V7C10 6.05719 10 5.58579 10.2929 5.29289C10.5858 5 11.0572 5 12 5H17C17.9428 5 18.4142 5 18.7071 5.29289C19 5.58579 19 6.05719 19 7V12C19 12.9428 19 13.4142 18.7071 13.7071C18.4142 14 17.9428 14 17 14H16M7 19H12C12.9428 19 13.4142 19 13.7071 18.7071C14 18.4142 14 17.9428 14 17V12C14 11.0572 14 10.5858 13.7071 10.2929C13.4142 10 12.9428 10 12 10H7C6.05719 10 5.58579 10 5.29289 10.2929C5 10.5858 5 11.0572 5 12V17C5 17.9428 5 18.4142 5.29289 18.7071C5.58579 19 6.05719 19 7 19Z" stroke="#464455" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M10 8V7C10 6.05719 10 5.58579 10.2929 5.29289C10.5858 5 11.0572 5 12 5H17C17.9428 5 18.4142 5 18.7071 5.29289C19 5.58579 19 6.05719 19 7V12C19 12.9428 19 13.4142 18.7071 13.7071C18.4142 14 17.9428 14 17 14H16M7 19H12C12.9428 19 13.4142 19 13.7071 18.7071C14 18.4142 14 17.9428 14 17V12C14 11.0572 14 10.5858 13.7071 10.2929C13.4142 10 12.9428 10 12 10H7C6.05719 10 5.58579 10 5.29289 10.2929C5 10.5858 5 11.0572 5 12V17C5 17.9428 5 18.4142 5.29289 18.7071C5.58579 19 6.05719 19 7 19Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
           <button class="edit-prompt-btn icon-btn" title="Edit prompt" aria-label="Edit prompt" data-prompt="${prompt.id}">
             <svg class="icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true">
-              <path stroke="#535358" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M27 5L17 15M17 5H8a3 3 0 00-3 3v16a3 3 0 003 3h16a3 3 0 003-3v-9"/>
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M27 5L17 15M17 5H8a3 3 0 00-3 3v16a3 3 0 003 3h16a3 3 0 003-3v-9"/>
             </svg>
           </button>
           <button class="delete-prompt-btn icon-btn" title="Delete prompt" aria-label="Delete prompt" data-prompt="${prompt.id}">
             <svg class="icon" viewBox="0 0 32 32" aria-hidden="true" fill="none">
-              <ellipse cx="16" cy="8" stroke="#535358" stroke-linejoin="round" stroke-width="1" rx="11" ry="3"/>
-              <path stroke="#535358" stroke-linejoin="round" stroke-width="1" d="M5 8l3 18s1 2 8 2 8-2 8-2l3-18"/>
-              <path stroke="#535358" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M18.5 16.5l-5 5M13.5 16.5l5 5"/>
+              <ellipse cx="16" cy="8" stroke="currentColor" stroke-linejoin="round" stroke-width="1" rx="11" ry="3"/>
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="1" d="M5 8l3 18s1 2 8 2 8-2 8-2l3-18"/>
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M18.5 16.5l-5 5M13.5 16.5l5 5"/>
             </svg>
           </button>
         </div>

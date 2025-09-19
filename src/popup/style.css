@@ -4,7 +4,7 @@
   Также подключены предпочитаемые темы через media queries.
 */
 :root {
-  --primary-color: #6200ee;
+  --primary-color: #6e33c0;
   --background-light: #f0f0f0;
   --background-dark: #1e1e1e;
   --text-light: #333;
@@ -330,6 +330,23 @@ header {
 /* Курсор-указатель для всех кнопок */
 button {
   cursor: pointer;
+}
+
+/* Выравнивание радиокнопок темы в настройках */
+.theme-select {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.theme-select label {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+.theme-select input[type="radio"] {
+  margin: 0 6px 0 0;
 }
 
 /* Контейнер для всплывающих уведомлений */
